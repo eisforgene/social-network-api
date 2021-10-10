@@ -1,4 +1,7 @@
-db.User.create({ name: 'Ernest Hemingway' })
+const app = require('express').Router();
+let User = require('../models/User');
+
+User.create({ name: 'Ernest Hemingway' })
   .then(dbUser => {
     console.log(dbUser);
   })
@@ -6,18 +9,18 @@ db.User.create({ name: 'Ernest Hemingway' })
     console.log(message);
   });
 
-app.get('/notes', (req, res) => {
-  db.Note.find({})
-    .then(dbNote => {
-      res.json(dbNote);
+app.get('/api/users', (req, res) => {
+  User.find({})
+    .then(dbUser => {
+      res.json(dbUser);
     })
     .catch(err => {
       res.json(err);
-    });
+    }); 
 });
 
-app.get('/user', (req, res) => {
-  db.User.find({})
+app.get('/api/users/:id', (req, res) => {
+  User.findById(req.params.id)
     .then(dbUser => {
       res.json(dbUser);
     })
@@ -26,11 +29,8 @@ app.get('/user', (req, res) => {
     });
 });
 
-app.post('/submit', ({ body }, res) => {
-  db.Note.create(body)
-    .then(({ _id }) =>
-      db.User.findOneAndUpdate({}, { $push: { notes: _id } }, { new: true })
-    )
+app.post('/api/users', ({ body }, res) => {
+  User.create(body)
     .then(dbUser => {
       res.json(dbUser);
     })
@@ -40,7 +40,7 @@ app.post('/submit', ({ body }, res) => {
 });
 
 app.get('/populate', (req, res) => {
-  db.User.find({})
+  User.find({})
     .populate({
       path: 'notes',
       select: '-__v'
