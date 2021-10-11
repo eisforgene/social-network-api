@@ -57,22 +57,30 @@ app.put('/api/users/:id', (req, res) => {
 });
 
 app.delete('/api/users/:id', (req, res) => {
-    User.destroy({ _id: req.params.id })
+    User.findOneAndDelete({ _id: req.params.id })
         .then(dbUser => {
-            console.log(dbUser);
+            if(!dbNote) {
+                res.json({ message: 'No note found with this id!' });
+                return;
+            }
+            res.json(dbUser);
         })
         .catch(({ message }) => {
-            console.log(message);
+            res.json(message);
         });
 });
 
 app.delete('/api/users/:userId/friends/:friendId', (req, res) => {
-    User.destroy({ _id: req.params.id })
+    User.findOneAndDelete({ _id: req.params.id })
         .then(dbUser => {
-            console.log(dbUser);
+            if(!dbNote) {
+                res.json({ message: 'No note found with this id!' });
+                return;
+            }
+            res.json(dbUser);
         })
         .catch(({ message }) => {
-            console.log(message);
+            res.json(message);
         });
 })
 

@@ -64,21 +64,30 @@ app.put('/api/thoughts/:id', (req, res) => {
 
 app.delete('/api/thoughts/:id', (req, res) => {
     Thought.findOneAndDelete({ _id: req.params.id })
+    
         .then(dbUser => {
-            console.log(dbUser);
+            if(!dbNote) {
+                res.json({ message: 'No note found with this id!' });
+                return;
+            }
+            res.json(dbUser);
         })
         .catch(({ message }) => {
-            console.log(message);
+            res.json(message);
         });
 })
 
 app.delete('/api/thoughts/:thoughtId/reactions', (req, res) => {
     Thought.findOneAndDelete({ _id: req.params.id })
         .then(dbUser => {
-            console.log(dbUser);
+            if(!dbNote) {
+                res.json({ message: 'No note found with this id!' });
+                return;
+            }
+            res.json(dbUser);
         })
         .catch(({ message }) => {
-            console.log(message);
+            res.json(message);
         });
 })
 
