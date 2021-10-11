@@ -31,6 +31,16 @@ app.post('/api/users', ({ body }, res) => {
         });
 });
 
+app.post('/api/users/:userId/friends/:friendId', ({ body }, res) => {
+    User.create(body)
+        .then(dbUser => {
+            res.json(dbUser);
+        })
+        .catch(err => {
+            res.json(err);
+        });
+});
+
 app.put('/api/users/:id', (req, res) => {
     User.findByIdAndUpdate(req.params.id, { $set: req.body })
         .populate({
@@ -47,6 +57,16 @@ app.put('/api/users/:id', (req, res) => {
 });
 
 app.delete('/api/users/:id', (req, res) => {
+    User.destroy({ _id: req.params.id })
+        .then(dbUser => {
+            console.log(dbUser);
+        })
+        .catch(({ message }) => {
+            console.log(message);
+        });
+});
+
+app.delete('/api/users/:userId/friends/:friendId', (req, res) => {
     User.destroy({ _id: req.params.id })
         .then(dbUser => {
             console.log(dbUser);
