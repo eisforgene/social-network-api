@@ -34,6 +34,19 @@ app.post('/api/thoughts', ({ body }, res) => {
         });
 });
 
+app.post('/api/thoughts/:thoughtId/reactions', ({ body }, res) => {
+    Thought.create(body)
+    .then(({ _id }) =>
+      db.User.findOneAndUpdate({}, { $push: { thoughts: _id } }, { new: true })
+    )    
+    .then(dbUser => {
+            res.json(dbUser);
+        })
+        .catch(err => {
+            res.json(err);
+        });
+});
+
 app.put('/api/thoughts/:id', (req, res) => {
     Thought.findByIdAndUpdate(req.params.id, { $set: req.body })
         .populate({
@@ -50,7 +63,17 @@ app.put('/api/thoughts/:id', (req, res) => {
 });
 
 app.delete('/api/thoughts/:id', (req, res) => {
-    Thought.destroy({ _id: req.params.id })
+    Thought.findOneAndDelete({ _id: req.params.id })
+        .then(dbUser => {
+            console.log(dbUser);
+        })
+        .catch(({ message }) => {
+            console.log(message);
+        });
+})
+
+app.delete('/api/thoughts/:thoughtId/reactions', (req, res) => {
+    Thought.findOneAndDelete({ _id: req.params.id })
         .then(dbUser => {
             console.log(dbUser);
         })
