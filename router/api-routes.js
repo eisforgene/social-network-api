@@ -59,8 +59,8 @@ app.put('/api/users/:id', (req, res) => {
 app.delete('/api/users/:id', (req, res) => {
     User.findOneAndDelete({ _id: req.params.id })
         .then(dbUser => {
-            if(!dbNote) {
-                res.json({ message: 'No note found with this id!' });
+            if(!dbUser) {
+                res.json({ message: 'No id found!' });
                 return;
             }
             res.json(dbUser);
@@ -73,8 +73,8 @@ app.delete('/api/users/:id', (req, res) => {
 app.delete('/api/users/:userId/friends/:friendId', (req, res) => {
     User.findOneAndDelete({ _id: req.params.id })
         .then(dbUser => {
-            if(!dbNote) {
-                res.json({ message: 'No note found with this id!' });
+            if(!dbUser) {
+                res.json({ message: 'No id found!' });
                 return;
             }
             res.json(dbUser);

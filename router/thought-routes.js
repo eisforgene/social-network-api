@@ -4,9 +4,12 @@ let Thought = require('../models/Thought');
 app.get('/api/thoughts', (req, res) => {
     Thought.find({})
         .then(dbUser => {
+            console.log(dbUser);
+            //res.json(dbUser);
             res.json(dbUser);
         })
         .catch(err => {
+            console.log(err);
             res.json(err);
         });
 });
@@ -23,9 +26,9 @@ app.get('/api/thoughts/:id', (req, res) => {
 
 app.post('/api/thoughts', ({ body }, res) => {
     Thought.create(body)
-    .then(({ _id }) =>
-      db.User.findOneAndUpdate({}, { $push: { thoughts: _id } }, { new: true })
-    )    
+    // .then(({ _id }) =>
+    //   Thought.findOneAndUpdate({}, { $push: { thoughts: _id } }, { new: true })
+    // )    
     .then(dbUser => {
             res.json(dbUser);
         })
@@ -34,11 +37,11 @@ app.post('/api/thoughts', ({ body }, res) => {
         });
 });
 
-app.post('/api/thoughts/:thoughtId/reactions', ({ body }, res) => {
-    Thought.create(body)
-    .then(({ _id }) =>
-      db.User.findOneAndUpdate({}, { $push: { thoughts: _id } }, { new: true })
-    )    
+app.post('/api/thoughts/:thoughtId/reactions', ({ body, params }, res) => {
+    Thought.findOneAndUpdate({_id: params.thoughtId}, { $push: { reactions: body } }, { new: true })
+    // .then(({ _id }) =>
+    //   Thought.findOneAndUpdate({}, { $push: { reactions: _id } }, { new: true })
+    // )    
     .then(dbUser => {
             res.json(dbUser);
         })
@@ -66,8 +69,8 @@ app.delete('/api/thoughts/:id', (req, res) => {
     Thought.findOneAndDelete({ _id: req.params.id })
     
         .then(dbUser => {
-            if(!dbNote) {
-                res.json({ message: 'No note found with this id!' });
+            if(!dbUser) {
+                res.json({ message: 'No thought found with this id!' });
                 return;
             }
             res.json(dbUser);
@@ -80,8 +83,8 @@ app.delete('/api/thoughts/:id', (req, res) => {
 app.delete('/api/thoughts/:thoughtId/reactions', (req, res) => {
     Thought.findOneAndDelete({ _id: req.params.id })
         .then(dbUser => {
-            if(!dbNote) {
-                res.json({ message: 'No note found with this id!' });
+            if(!dbUser) {
+                res.json({ message: 'No thought found with this id!' });
                 return;
             }
             res.json(dbUser);
