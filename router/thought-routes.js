@@ -26,10 +26,10 @@ app.get('/api/thoughts/:id', (req, res) => {
 
 app.post('/api/thoughts', ({ body }, res) => {
     Thought.create(body)
-    // .then(({ _id }) =>
-    //   Thought.findOneAndUpdate({}, { $push: { thoughts: _id } }, { new: true })
-    // )    
-    .then(dbUser => {
+        // .then(({ _id }) =>
+        //   Thought.findOneAndUpdate({}, { $push: { thoughts: _id } }, { new: true })
+        // )    
+        .then(dbUser => {
             res.json(dbUser);
         })
         .catch(err => {
@@ -38,11 +38,11 @@ app.post('/api/thoughts', ({ body }, res) => {
 });
 
 app.post('/api/thoughts/:thoughtId/reactions', ({ body, params }, res) => {
-    Thought.findOneAndUpdate({_id: params.thoughtId}, { $push: { reactions: body } }, { new: true })
-    // .then(({ _id }) =>
-    //   Thought.findOneAndUpdate({}, { $push: { reactions: _id } }, { new: true })
-    // )    
-    .then(dbUser => {
+    Thought.findOneAndUpdate({ _id: params.thoughtId }, { $push: { reactions: body } }, { new: true })
+        // .then(({ _id }) =>
+        //   Thought.findOneAndUpdate({}, { $push: { reactions: _id } }, { new: true })
+        // )    
+        .then(dbUser => {
             res.json(dbUser);
         })
         .catch(err => {
@@ -67,9 +67,9 @@ app.put('/api/thoughts/:id', (req, res) => {
 
 app.delete('/api/thoughts/:id', (req, res) => {
     Thought.findOneAndDelete({ _id: req.params.id })
-    
+
         .then(dbUser => {
-            if(!dbUser) {
+            if (!dbUser) {
                 res.json({ message: 'No thought found with this id!' });
                 return;
             }
@@ -81,9 +81,10 @@ app.delete('/api/thoughts/:id', (req, res) => {
 })
 
 app.delete('/api/thoughts/:thoughtId/reactions', (req, res) => {
-    Thought.findOneAndDelete({ _id: req.params.id })
+    Thought.findOneAndDelete(req.params.thoughtId)
         .then(dbUser => {
-            if(!dbUser) {
+            console.log(dbUser);
+            if (!dbUser) {
                 res.json({ message: 'No thought found with this id!' });
                 return;
             }
@@ -93,5 +94,20 @@ app.delete('/api/thoughts/:thoughtId/reactions', (req, res) => {
             res.json(message);
         });
 })
+
+// app.delete('/api/thoughts/:thoughtId/reactions', ({ body, params }, res) => {
+//     Thought.findOneAndDelete({ _id: params.thoughtId })
+//         // .then(({ _id }) =>
+//         //   Thought.findOneAndUpdate({}, { $push: { reactions: _id } }, { new: true })
+//         // )    
+//         .then(dbUser => {
+//             console.log(dbUser);
+//             res.json(dbUser);
+//         })
+//         .catch(err => {
+//             console.log(err);
+//             res.json(err);
+//         });
+// });
 
 module.exports = app;
