@@ -31,8 +31,9 @@ app.post('/api/users', ({ body }, res) => {
         });
 });
 
-app.post('/api/users/:userId/friends/:friendId', ({ body }, res) => {
-    User.create(body)
+app.post('/api/users/:userId/friends/:friendId', (req, res) => {
+    User.findByIdAndUpdate(req.params.userId,
+        { $push: { friends: req.params.friendId } }, { new: true })
         .then(dbUser => {
             res.json(dbUser);
         })
@@ -59,7 +60,7 @@ app.put('/api/users/:id', (req, res) => {
 app.delete('/api/users/:id', (req, res) => {
     User.findOneAndDelete({ _id: req.params.id })
         .then(dbUser => {
-            if(!dbUser) {
+            if (!dbUser) {
                 res.json({ message: 'No id found!' });
                 return;
             }
@@ -71,9 +72,10 @@ app.delete('/api/users/:id', (req, res) => {
 });
 
 app.delete('/api/users/:userId/friends/:friendId', (req, res) => {
-    User.findOneAndDelete({ _id: req.params.id })
+    User.findOneAndUpdate(req.params.userId,
+        { $pull: { friends: req.params.friendId } }, { new: true })
         .then(dbUser => {
-            if(!dbUser) {
+            if (!dbUser) {
                 res.json({ message: 'No id found!' });
                 return;
             }
@@ -82,6 +84,6 @@ app.delete('/api/users/:userId/friends/:friendId', (req, res) => {
         .catch(({ message }) => {
             res.json(message);
         });
-})
+});
 
 module.exports = app;
