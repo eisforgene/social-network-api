@@ -20,4 +20,4 @@ Javascript
 Markdown Guide Semantic Tags JavaScript MongoDb
 
 ##### Demo:
-[!https://watch.screencastify.com/v/5wf2m4gIHBO88tZxlGcO]
+[https://watch.screencastify.com/v/5wf2m4gIHBO88tZxlGcO]
